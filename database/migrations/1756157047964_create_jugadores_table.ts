@@ -10,12 +10,12 @@ export default class extends BaseSchema {
       table.integer('puntaje').defaultTo(0) // puntaje acumulado
 
       // FK hacia users
-      table
-        .integer('user_id')
-        .unsigned()
-        .references('user_id')
-        .inTable('usuarios')
-        .onDelete('CASCADE')
+      // table
+      //   .integer('user_id')
+      //   .unsigned()
+      //   .references('user_id')
+      //   .inTable('usuarios')
+      //   .onDelete('CASCADE')
 
       // FK hacia salas (jugador pertenece a una sala)
       table

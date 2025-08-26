@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany, belongsTo } from '@adonisjs/lucid/orm'
 import type { HasMany, BelongsTo } from '@adonisjs/lucid/orm'
-import Usuario from './usuario.js'
+
 import Sala from './sala.ts'
 
 export default class Jugadore extends BaseModel {
@@ -35,10 +35,7 @@ export default class Jugadore extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => Usuario, {
-    foreignKey: 'user_id',
-  })
-  declare usuario: BelongsTo<typeof Usuario>
+  
 
   
   @belongsTo(() => Sala, {
