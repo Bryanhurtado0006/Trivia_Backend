@@ -1,24 +1,49 @@
-import Sala from "#models/sala";
+import Sala from '#models/sala'
 
 export default class SalaService {
   // Crear una sala
-  async crearSala(codigo: string, moderador: string) {
-    const sala = await Sala.create({ codigo, moderador, estado: 'activa' })
-    return sala
+  async crearSala(data: {
+    codigo: string
+    nombre: string
+    jugadores?: number
+    descripcion?: string
+    moderador: string
+  }) {
+    return Sala.create({
+      codigo: data.codigo,
+      nombre: data.nombre,
+      jugadores: data.jugadores ?? 0,
+      descripcion: data.descripcion ?? null,
+      moderador: data.moderador,
+      estado: 'activa',
+    })
   }
 
   // Listar todas las salas
   async listarSalas() {
-    return Sala.all()
+    return Sala.query().preload('preguntas').preload('jugadoresRelacion')
   }
 
   // Obtener sala por ID
   async obtenerSala(id: number) {
-    return Sala.find(id)
+    return Sala.query()
+      .where('id', id)
+      .preload('preguntas')
+      .preload('jugadoresRelacion')
+      .firstOrFail()
   }
 
-  // Actualizar estado de la sala
-  async actualizarSala(id: number, data: Partial<{ codigo: string; estado: 'activa' | 'cerrada' }>) {
+  // Actualizar sala
+  async actualizarSala(
+    id: number,
+    data: Partial<{
+      codigo: string
+      nombre: string
+      descripcion: string
+      jugadores: number
+      estado: 'activa' | 'cerrada'
+    }>
+  ) {
     const sala = await Sala.findOrFail(id)
     sala.merge(data)
     await sala.save()
@@ -29,6 +54,6 @@ export default class SalaService {
   async eliminarSala(id: number) {
     const sala = await Sala.findOrFail(id)
     await sala.delete()
-    return { message: 'Sala eliminada' }
+    return { message: 'Sala eliminada correctamente' }
   }
 }

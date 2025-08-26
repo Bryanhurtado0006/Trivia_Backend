@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany, belongsTo } from '@adonisjs/lucid/orm'
-import type { HasMany, BelongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/orm'
 import Pregunta from './Pregunta.ts'
-import Jugadore from './jugadore.js'
+import Jugadore from './jugadore.ts'
 
 export default class Sala extends BaseModel {
   public static table = 'salas'
@@ -10,8 +10,17 @@ export default class Sala extends BaseModel {
   @column({ isPrimary: true, columnName: 'id_sala' })
   declare id_sala: number
 
-  @column({columnName:'codigo'})
+  @column({ columnName: 'codigo' })
   declare codigo: string
+
+  @column({columnName:'nombre'})
+  declare nombre: string
+
+  @column({columnName:'descripcion'})
+  declare descripcion: string | null
+
+  @column({columnName:'jugadores'})
+  declare jugadores: number
 
   @column({columnName:'moderador'})
   declare moderador: string
@@ -25,15 +34,15 @@ export default class Sala extends BaseModel {
   @column.dateTime({ columnName: 'updated_at', autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  /** 🔗 Relación con Preguntas */
+  /** 🔗 Relación con preguntas */
   @hasMany(() => Pregunta, {
     foreignKey: 'id_sala',
   })
   declare preguntas: HasMany<typeof Pregunta>
 
-  /*Relacin con jugadores */
+  /** 🔗 Relación con jugadores */
   @hasMany(() => Jugadore, {
     foreignKey: 'id_sala',
   })
-  declare jugadores: HasMany<typeof Jugadore>
+  declare jugadoresRelacion: HasMany<typeof Jugadore>
 }
