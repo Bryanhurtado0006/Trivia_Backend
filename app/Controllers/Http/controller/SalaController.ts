@@ -33,4 +33,10 @@ export default class SalaController {
     const id = parseInt(params.id)
     return salaService.eliminarSala(id)
   }
+
+  // 🚀 Nuevo: unirse a sala
+  async unirse({ request }) {
+    const { codigoSala, nickname, socket_id, is_moderador } = request.all()
+    return salaService.unirseASala(codigoSala, nickname, socket_id, is_moderador)
+  }
 }

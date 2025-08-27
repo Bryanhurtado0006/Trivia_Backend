@@ -1,4 +1,6 @@
 import Sala from '#models/sala'
+import Jugadore from '#models/jugadore'
+
 
 export default class SalaService {
   // Crear una sala
@@ -55,5 +57,40 @@ export default class SalaService {
     const sala = await Sala.findOrFail(id)
     await sala.delete()
     return { message: 'Sala eliminada correctamente' }
+  }
+
+  // 🚀 Unirse a una sala
+  async unirseASala(codigo: string, nickname: string, socket_id?: string, is_moderador: boolean = false) {
+    // Buscar sala
+    const sala = await Sala.findBy('codigo', codigo)
+    if (!sala) {
+      throw new Error('❌ Sala no encontrada')
+    }
+
+    // Validar estado
+    if (sala.estado !== 'activa') {
+      throw new Error('❌ La sala no está disponible')
+    }
+
+    // (Opcional) validar límite de jugadores
+    // if (sala.jugadores >= 10) throw new Error('❌ Sala llena')
+
+    // Crear jugador
+    const jugador = await Jugadore.create({
+      nickname,
+      id_sala: sala.id_sala,
+      is_moderador,
+      socket_id: socket_id ?? null,
+    })
+
+    // Actualizar contador de jugadores
+    sala.jugadores = (sala.jugadores ?? 0) + 1
+    await sala.save()
+
+    return {
+      message: `👤 ${nickname} se unió a la sala ${sala.codigo}`,
+      sala,
+      jugador,
+    }
   }
 }

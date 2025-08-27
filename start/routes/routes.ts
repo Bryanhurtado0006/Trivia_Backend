@@ -20,6 +20,8 @@ Route.put('/salas/:id', salaController.actualizar)
 Route.delete('/salas/:id', salaController.eliminar)
 Route.get('/salas', salaController.listar)
 Route.get('/salas/:id', salaController.obtener)
+Route.post('/salas/unirse', salaController.unirse)
+
 
 //jugadores
 Route.post('/jugadores', jugadorController.crear)
